@@ -9,22 +9,22 @@ bergerak, font Sora + Plus Jakarta Sans.
 
 | File | Deskripsi |
 |------|-----------|
-| [`index.html`](index.html) / [`presentasi-claude-excel.html`](presentasi-claude-excel.html) | **Deck carousel** layar penuh (10 slide) — untuk dipresentasikan live |
-| [`landing-claude-excel.html`](landing-claude-excel.html) | **Landing page scroll** — versi halaman panjang bergaya website |
+| [`index.html`](index.html) | **Landing page scroll** — homepage repo, versi halaman panjang bergaya website |
+| [`presentasi-claude-excel.html`](presentasi-claude-excel.html) | **Deck carousel** layar penuh (10 slide) — untuk dipresentasikan live |
 | [`flyer-claude-excel.html`](flyer-claude-excel.html) · [`flyer-claude-excel.png`](flyer-claude-excel.png) | **Flyer** undangan sesi (siap cetak / kirim WhatsApp) |
 
 ## 🌐 Live (GitHub Pages)
 
 Aktifkan **Settings → Pages → Deploy from branch: `main` / root**, lalu:
 
-- Deck: `https://victorfirman.github.io/Claude-in-Excel/`
-- Landing: `https://victorfirman.github.io/Claude-in-Excel/landing-claude-excel.html`
+- Landing (homepage): `https://victorfirman.github.io/Claude-in-Excel/`
+- Deck: `https://victorfirman.github.io/Claude-in-Excel/presentasi-claude-excel.html`
 - Flyer: `https://victorfirman.github.io/Claude-in-Excel/flyer-claude-excel.html`
 
 ## 🎞️ Deck — navigasi
 
 - **← / →** atau **Space** — pindah slide · **F** — layar penuh · **Home / End** — awal/akhir
-- Klik **dot**, **swipe**, atau tombol panah di layar · deep-link `…/index.html#3`
+- Klik **dot**, **swipe**, atau tombol panah di layar · deep-link `…/presentasi-claude-excel.html#3`
 
 ## 📋 10 Slide
 

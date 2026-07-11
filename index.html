@@ -23,21 +23,19 @@
     --grad-light:linear-gradient(160deg,#ffffff 0%,#f7f4fb 55%,#f2ecfb 100%);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{height:100%;}
+  html{scroll-behavior:smooth;}
   body{
     font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#0C004F;
-    overflow:hidden;-webkit-font-smoothing:antialiased;
+    overflow-x:hidden;-webkit-font-smoothing:antialiased;
   }
   h1,h2,h3,h4,.font-sora{font-family:'Sora',sans-serif;}
   .ac{color:var(--accent);}
 
   /* ============ DECK SHELL ============ */
-  .deck-shell{position:fixed;inset:0;--chrome:#fff;--chrome-dim:rgba(255,255,255,.45);--chrome-bg:rgba(255,255,255,.12);--chrome-bd:rgba(255,255,255,.22);}
-  .deck-shell[data-theme="light"]{--chrome:#260757;--chrome-dim:rgba(38,7,87,.38);--chrome-bg:rgba(38,7,87,.06);--chrome-bd:rgba(38,7,87,.14);}
-  .deck{position:absolute;inset:0;overflow:hidden;}
-  .deck-track{display:flex;height:100%;width:100%;transition:transform .62s cubic-bezier(.22,.61,.36,1);will-change:transform;}
-  .slide{flex:0 0 100%;width:100%;min-width:0;height:100vh;overflow-y:auto;overflow-x:hidden;position:relative;display:flex;flex-direction:column;justify-content:center;padding:64px clamp(40px,6vw,110px);}
-  .slide::-webkit-scrollbar{width:0;height:0;}
+  .deck-shell{position:relative;--chrome:#fff;--chrome-dim:rgba(255,255,255,.45);--chrome-bg:rgba(255,255,255,.12);--chrome-bd:rgba(255,255,255,.22);}
+  .deck{position:relative;}
+  .deck-track{display:block;}
+  .slide{width:100%;min-height:100vh;overflow:hidden;position:relative;display:flex;flex-direction:column;justify-content:center;padding:110px clamp(40px,6vw,110px) 90px;}
   .slide.dark{background:var(--grad-dark);color:#fff;}
   .slide.light{background:var(--grad-light);}
   .slide.light::before{content:"";position:absolute;top:-160px;right:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(237,26,58,.10),transparent 70%);pointer-events:none;}
@@ -60,9 +58,9 @@
 
   /* entrance animation */
   .anim{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s cubic-bezier(.22,.61,.36,1);transition-delay:calc(var(--d,0)*95ms);}
-  .slide.is-active .anim{opacity:1;transform:none;}
+  .slide.is-active .anim,.slide.in-view .anim{opacity:1;transform:none;}
   .anim.zoom{transform:scale(.92);}
-  .slide.is-active .anim.zoom{transform:none;}
+  .slide.is-active .anim.zoom,.slide.in-view .anim.zoom{transform:none;}
 
   /* ============ SLIDE 1 — HERO ============ */
   .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;max-width:1240px;margin:0 auto;width:100%;}
@@ -92,7 +90,7 @@
   .mock-answer .mp{font-size:12px;color:#b6a9d8;margin-bottom:12px;}
   .mock-bar{height:12px;border-radius:6px;background:rgba(255,255,255,.1);margin-bottom:9px;overflow:hidden;}
   .mock-bar span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#ff5c73,var(--accent));width:0;transition:width 1s ease .3s;}
-  .slide.is-active .mock-bar span{width:var(--w);}
+  .slide.is-active .mock-bar span,.slide.in-view .mock-bar span{width:var(--w);}
   .mock-tag{margin-top:12px;font-size:12.5px;font-weight:600;color:#f4ede0;display:flex;align-items:center;gap:8px;}
   .mock-tag::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent);}
 
@@ -192,32 +190,28 @@
   /* persistent brand mark */
   .sdi-mark{width:38px;height:38px;background:var(--sdi-logo) center/contain no-repeat;}
 
-  /* ============ DECK CHROME ============ */
-  .topbar{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,4vw,44px);z-index:40;pointer-events:none;}
-  .topbar .brand{display:flex;align-items:center;gap:12px;pointer-events:auto;}
-  .topbar .brand .nm{font-family:'Sora',sans-serif;font-weight:700;font-size:13.5px;color:var(--chrome);letter-spacing:.02em;transition:color .4s;}
-  .topbar .tools{display:flex;gap:10px;pointer-events:auto;}
-  .icon-btn{width:40px;height:40px;border-radius:11px;background:var(--chrome-bg);border:1px solid var(--chrome-bd);color:var(--chrome);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .4s,transform .2s;}
-  .icon-btn:hover{transform:translateY(-1px);}
-  .icon-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;}
+  /* ============ LANDING CHROME ============ */
+  .lnav{position:fixed;top:0;left:0;right:0;height:64px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4vw,44px);background:rgba(12,0,79,.82);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);}
+  .lnav .brand{display:flex;align-items:center;gap:11px;}
+  .lnav .brand .nm{font-family:'Sora',sans-serif;font-weight:700;font-size:13.5px;color:#fff;letter-spacing:.02em;}
+  .lnav .links{display:flex;gap:24px;align-items:center;}
+  .lnav .links a{font-size:13px;font-weight:600;color:#c4b6ea;text-decoration:none;transition:color .2s;}
+  .lnav .links a:hover,.lnav .links a.active{color:#fff;}
+  .lnav .cta{background:var(--accent);color:#fff;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;padding:9px 18px;border-radius:999px;text-decoration:none;transition:transform .2s;}
+  .lnav .cta:hover{transform:translateY(-1px);}
 
-  .progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:50;transition:width .5s cubic-bezier(.22,.61,.36,1);box-shadow:0 0 12px rgba(237,26,58,.5);}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:60;box-shadow:0 0 12px rgba(237,26,58,.5);}
 
-  .arrow{position:fixed;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:var(--chrome-bg);border:1px solid var(--chrome-bd);color:var(--chrome);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:40;transition:background .2s,color .4s,opacity .3s,transform .2s;backdrop-filter:blur(6px);}
-  .arrow:hover{transform:translateY(-50%) scale(1.06);}
-  .arrow.prev{left:clamp(14px,2vw,28px);}
-  .arrow.next{right:clamp(14px,2vw,28px);}
-  .arrow svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;}
-  .arrow.disabled{opacity:.25;pointer-events:none;}
+  .to-top{position:fixed;bottom:26px;right:26px;width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50;opacity:0;pointer-events:none;transition:opacity .3s,transform .2s;box-shadow:0 10px 26px rgba(237,26,58,.4);}
+  .to-top.show{opacity:1;pointer-events:auto;}
+  .to-top:hover{transform:translateY(-2px);}
+  .to-top svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;}
 
-  .botbar{position:fixed;bottom:24px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:22px;z-index:40;pointer-events:none;}
-  .dots{display:flex;gap:9px;pointer-events:auto;}
-  .dot-btn{width:9px;height:9px;border-radius:50%;background:var(--chrome-dim);border:none;cursor:pointer;padding:0;transition:width .3s,background .3s;}
-  .dot-btn.active{width:26px;border-radius:5px;background:var(--accent);}
-  .counter{position:fixed;bottom:22px;right:clamp(24px,4vw,44px);font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--chrome-dim);z-index:40;letter-spacing:.05em;}
-  .counter b{color:var(--chrome);}
-  .hint{position:fixed;bottom:22px;left:clamp(24px,4vw,44px);font-size:11.5px;color:var(--chrome-dim);z-index:40;display:flex;align-items:center;gap:7px;}
-  .kbd{border:1px solid var(--chrome-bd);border-radius:5px;padding:1px 6px;font-family:'Sora',sans-serif;font-size:11px;color:var(--chrome);}
+  .scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);color:#b6a9d8;font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2;}
+  .scroll-cue svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;animation:cue 1.8s ease-in-out infinite;}
+  @keyframes cue{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+  @media (prefers-reduced-motion:reduce){.scroll-cue svg{animation:none;}}
+  @media (max-width:820px){.lnav .links{display:none;}}
 
   @media (max-width:820px){
     .hero-grid{grid-template-columns:1fr;gap:30px;}
@@ -236,14 +230,25 @@
 </style>
 </head>
 <body>
-<div class="deck-shell" id="shell" data-theme="dark">
-  <div class="progress" id="progress"></div>
+<div class="progress" id="progress"></div>
+<nav class="lnav">
+  <div class="brand"><span class="sdi-mark"></span><span class="nm">Claude in Excel</span></div>
+  <div class="links">
+    <a href="#sec1">Home</a>
+    <a href="#secPre">Prasyarat</a>
+    <a href="#sec4">Agenda</a>
+    <a href="#sec5">Skenario</a>
+    <a href="#sec8">Goals</a>
+  </div>
+  <a href="#sec9" class="cta">Q&amp;A</a>
+</nav>
 
+<div class="deck-shell" id="shell" data-theme="dark">
   <div class="deck" id="deck">
     <div class="deck-track" id="track">
 
       <!-- SLIDE 1 — HERO -->
-      <section class="slide dark particles-bg" data-theme="dark">
+      <section class="slide dark particles-bg" id="sec1" data-theme="dark">
         <div class="hero-grid">
           <div>
             <span class="eyebrow anim" style="--d:0"><span class="dot"></span>SDI Sharing Session · Member of NEI Group</span>
@@ -251,10 +256,10 @@
             <div class="hero-sub anim" style="--d:2">Analyze Faster. Work Smarter. Make Better Decisions.</div>
             <p class="hero-lead anim" style="--d:3">Bagaimana AI membantu pekerjaan sehari-hari di Microsoft Excel. <b>Satu file Excel. Banyak kemungkinan.</b></p>
             <div class="hero-actions anim" style="--d:4">
-              <button class="btn btn-primary" data-goto="next">Mulai Presentasi
-                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </button>
-              <button class="btn btn-ghost" data-goto="3">Lihat Agenda Demo</button>
+              <a href="#sec2" class="btn btn-primary">Mulai Jelajah
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+              </a>
+              <a href="#sec4" class="btn btn-ghost">Lihat Agenda Demo</a>
             </div>
             <div class="cobrand anim" style="--d:5">
               <svg viewBox="0 0 100 100" width="22" height="22"><g stroke="#D97757" stroke-width="6.5" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="9"/><line x1="50" y1="50" x2="79" y2="21"/><line x1="50" y1="50" x2="91" y2="50"/><line x1="50" y1="50" x2="79" y2="79"/><line x1="50" y1="50" x2="50" y2="91"/><line x1="50" y1="50" x2="21" y2="79"/><line x1="50" y1="50" x2="9" y2="50"/><line x1="50" y1="50" x2="21" y2="21"/><line x1="50" y1="50" x2="66" y2="12"/><line x1="50" y1="50" x2="88" y2="34"/><line x1="50" y1="50" x2="88" y2="66"/><line x1="50" y1="50" x2="66" y2="88"/><line x1="50" y1="50" x2="34" y2="88"/><line x1="50" y1="50" x2="12" y2="66"/><line x1="50" y1="50" x2="12" y2="34"/><line x1="50" y1="50" x2="34" y2="12"/></g><circle cx="50" cy="50" r="9" fill="#D97757"/></svg>
@@ -275,10 +280,13 @@
             </div>
           </div>
         </div>
+        <a href="#sec2" class="scroll-cue" aria-label="Scroll ke bawah">Scroll
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </a>
       </section>
 
       <!-- SLIDE 2 — DETAIL ACARA -->
-      <section class="slide light" data-theme="light">
+      <section class="slide light" id="sec2" data-theme="light">
         <div class="s-inner">
           <span class="eyebrow anim" style="--d:0">Pembuka</span>
           <h2 class="s-head anim" style="--d:1">Detail Acara</h2>
@@ -358,7 +366,7 @@
       </section>
 
       <!-- SLIDE 4 — ALUR DEMO -->
-      <section class="slide light" data-theme="light">
+      <section class="slide light" id="sec4" data-theme="light">
         <div class="s-inner">
           <span class="eyebrow anim" style="--d:0">Agenda &amp; Timeline</span>
           <h2 class="s-head anim" style="--d:1">Urutan Alur Demo</h2>
@@ -376,7 +384,7 @@
       </section>
 
       <!-- SLIDE 5 — SKENARIO 1 & 2 -->
-      <section class="slide light" data-theme="light">
+      <section class="slide light" id="sec5" data-theme="light">
         <div class="s-inner">
           <span class="eyebrow anim" style="--d:0">Demo Scenarios 1 – 2</span>
           <h2 class="s-head anim" style="--d:1">Skenario 1 &amp; 2</h2>
@@ -451,7 +459,7 @@
       </section>
 
       <!-- SLIDE 8 — BONUS & GOALS -->
-      <section class="slide dark particles-bg" data-theme="dark">
+      <section class="slide dark particles-bg" id="sec8" data-theme="dark">
         <div class="s-inner">
           <span class="eyebrow anim" style="--d:0"><span class="dot"></span>Demo Final Goal</span>
           <h2 class="s-head anim" style="--d:1;color:#fff;">Bonus &amp; Goals Akhir</h2>
@@ -470,7 +478,7 @@
       </section>
 
       <!-- SLIDE 9 — PENUTUP -->
-      <section class="slide dark particles-bg" data-theme="dark">
+      <section class="slide dark particles-bg" id="sec9" data-theme="dark">
         <div class="close-wrap">
           <span class="eyebrow anim" style="--d:0;justify-content:center;"><span class="dot"></span>Terima Kasih</span>
           <h2 class="close-title anim" style="--d:1">Mari Berdiskusi</h2>
@@ -490,21 +498,9 @@
     </div>
   </div>
 
-  <!-- CHROME -->
-  <div class="topbar">
-    <div class="brand"><span class="sdi-mark"></span><span class="nm">Solusi Daya Indonesia</span></div>
-    <div class="tools">
-      <button class="icon-btn" id="fsBtn" title="Layar penuh (F)"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg></button>
-    </div>
-  </div>
-
-  <button class="arrow prev" id="prevBtn" aria-label="Sebelumnya"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-  <button class="arrow next" id="nextBtn" aria-label="Berikutnya"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-
-  <div class="botbar"><div class="dots" id="dots"></div></div>
-  <div class="counter" id="counter"><b>01</b> / 10</div>
-  <div class="hint"><span class="kbd">←</span><span class="kbd">→</span> navigasi &nbsp;·&nbsp; <span class="kbd">F</span> layar penuh</div>
 </div>
+
+<button class="to-top" id="toTop" aria-label="Kembali ke atas"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
 
 <script>
 /* ---------- Particle background (adapted from assets/js/hero-bg.js) ---------- */
@@ -537,71 +533,49 @@
   var s=document.querySelectorAll(".particles-bg");for(var i=0;i<s.length;i++)init(s[i]);
 })();
 
-/* ---------- Carousel ---------- */
+/* ---------- Scroll landing behaviour ---------- */
 (function(){
-  var track=document.getElementById("track"),
-      slides=Array.prototype.slice.call(track.children),
-      shell=document.getElementById("shell"),
-      progress=document.getElementById("progress"),
-      counter=document.getElementById("counter"),
-      prevBtn=document.getElementById("prevBtn"),
-      nextBtn=document.getElementById("nextBtn"),
-      dotsWrap=document.getElementById("dots"),
-      fsBtn=document.getElementById("fsBtn"),
-      n=slides.length, idx=0;
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var progress=document.getElementById("progress");
+  var toTop=document.getElementById("toTop");
+  var navLinks=Array.prototype.slice.call(document.querySelectorAll(".lnav .links a"));
 
-  // build dots
-  slides.forEach(function(_,i){
-    var b=document.createElement("button");b.className="dot-btn";b.setAttribute("aria-label","Slide "+(i+1));
-    b.addEventListener("click",function(){go(i);});dotsWrap.appendChild(b);
-  });
-  var dots=Array.prototype.slice.call(dotsWrap.children);
-
-  function pad(x){return (x<9?"0":"")+(x+1);}
-  function render(){
-    track.style.transform="translateX("+(-idx*100)+"%)";
-    slides.forEach(function(s,i){s.classList.toggle("is-active",i===idx);});
-    dots.forEach(function(d,i){d.classList.toggle("active",i===idx);});
-    shell.setAttribute("data-theme",slides[idx].getAttribute("data-theme")||"dark");
-    progress.style.width=(n===1?100:(idx/(n-1))*100)+"%";
-    counter.innerHTML="<b>"+pad(idx)+"</b> / "+pad(n-1);
-    prevBtn.classList.toggle("disabled",idx===0);
-    nextBtn.classList.toggle("disabled",idx===n-1);
+  // reveal on scroll
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting) en.target.classList.add("in-view"); });
+    },{threshold:0.18});
+    slides.forEach(function(s){io.observe(s);});
+  } else {
+    slides.forEach(function(s){s.classList.add("in-view");});
   }
-  function go(i){idx=Math.max(0,Math.min(n-1,i));render();try{history.replaceState(null,"","#"+(idx+1));}catch(e){}}
-  // deep-link: open at #N (1-based)
-  (function(){var m=/^#(\d+)$/.exec(location.hash||"");if(m){idx=Math.max(0,Math.min(n-1,parseInt(m[1],10)-1));}})();
-  function next(){go(idx+1);}
-  function prev(){go(idx-1);}
 
-  nextBtn.addEventListener("click",next);
-  prevBtn.addEventListener("click",prev);
-  document.addEventListener("keydown",function(e){
-    if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();next();}
-    else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();prev();}
-    else if(e.key==="Home"){go(0);}else if(e.key==="End"){go(n-1);}
-    else if(e.key==="f"||e.key==="F"){toggleFs();}
-  });
-  // data-goto buttons
-  document.querySelectorAll("[data-goto]").forEach(function(b){
-    b.addEventListener("click",function(){var t=b.getAttribute("data-goto");if(t==="next")next();else go(parseInt(t,10));});
-  });
-  // swipe
-  var sx=0,sy=0,drag=false;
-  track.addEventListener("pointerdown",function(e){sx=e.clientX;sy=e.clientY;drag=true;});
-  window.addEventListener("pointerup",function(e){
-    if(!drag)return;drag=false;var dx=e.clientX-sx,dy=e.clientY-sy;
-    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}
-  });
-  // fullscreen
-  function toggleFs(){var el=document.documentElement;if(!document.fullscreenElement){(el.requestFullscreen||el.webkitRequestFullscreen).call(el);}else{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}}
-  fsBtn.addEventListener("click",toggleFs);
+  // scroll progress bar + back-to-top visibility
+  function onScroll(){
+    var st=window.pageYOffset||document.documentElement.scrollTop;
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    progress.style.width=(h>0?(st/h)*100:0)+"%";
+    toTop.classList.toggle("show",st>window.innerHeight*0.6);
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+  onScroll();
 
-  // initial position instant (no transition) — clean deep-link jumps
-  track.style.transition="none";
-  render();
-  track.getBoundingClientRect();
-  requestAnimationFrame(function(){track.style.transition="";});
+  toTop.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+
+  // active nav link via section in view
+  var linkFor={};
+  navLinks.forEach(function(a){var id=a.getAttribute("href").slice(1);linkFor[id]=a;});
+  if("IntersectionObserver" in window){
+    var io2=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          navLinks.forEach(function(a){a.classList.remove("active");});
+          var a=linkFor[en.target.id]; if(a)a.classList.add("active");
+        }
+      });
+    },{threshold:0.5});
+    navLinks.forEach(function(a){var el=document.getElementById(a.getAttribute("href").slice(1));if(el)io2.observe(el);});
+  }
 })();
 </script>
 </body>
